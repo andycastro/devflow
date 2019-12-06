@@ -14,7 +14,7 @@ Apenas uma forma de organizar o flow de trabalho para novos projetos nesta stack
 - Rocketseat ReactJS e React Native
 - MarkDown All in One - [Download](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
 - Live Server: [Download](https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one)
-- 
+
 
 #### Rullers and Settings (cmd + shift + p)
 
