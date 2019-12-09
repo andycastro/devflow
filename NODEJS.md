@@ -164,7 +164,7 @@ Clicando na aba do bug no VsCode iremos adicionar uma nova configuração:
 ```
 {
   "name": "Launch Program",
-  "restart": "true",
+  "restart": true,
   "protocol": "inspector"
 }
 ```
