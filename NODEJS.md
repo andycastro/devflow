@@ -1,15 +1,103 @@
 # Iniciando aplicação NodeJS
+## Configurações iniciais
 
-Iniciando projeto
+Inicialmente iremos criar o nosso arquivo package.json utilizando o comando abaixo:
+
 ``` yarn init -y ```
 
-Instalando Express
+Feito isso, iremos instalar o Express, que é um framework para Node.js que nos permite ter um conjunto de recursos a nossa aplicação.
 
 ``` yarn add express ```
+
+Dessa forma, iremos iniciar a organização de nossos diretórios, para que a aplicação fique bem fluida.
+
+No diretório raiz, vamos criar uma pasta chamada src, é nela que todo o código da nossa aplicação estará.
+
+```mkdir src```
+
+Vamos entrar na pasta src, e nela criaremos três arquivos para organizar a nossa aplicação, app.js, server.js e route.js.
+
+```cd src; touch app.js; touch server.js; touch routes.js```
+
+No arquivo app.js iremos configurar o nosso servidor adicionando o seguinte código:
+
+```
+//importa o express
+const express = require('express'); 
+//importa as rotas do arquivo routes.js
+const routes = require('./routes');
+
+//define a classe App
+class App {
+  constructor(){
+    this.server = expres();
+  }
+
+  middlewares(){
+    this.server.use(express.json());
+  }
+  routes() {
+    this.server.use(routes);
+  }
+}
+
+module.exports = new App().server;
+
+```
+
+Uma vez com estas configurações criadas, iremos abrir o arquivo server.js e importar o App, inserindo as seguintes linhas de código:
+
+```
+const app = require('./app');
+app.listen(3333);
+```
+
+Agora vamos às rotas! Abra o arquivo routes.js para importar o Router do express. Digite o seguinte código:
+
+```
+const { Router } = require('express');
+
+```
+Assim, estamos importando apenas o carinha Router do express, ao invés de importar todo o express, que é uma forma da gente separar o roteamento em outro arquivo.
+
+Seguindo, iremos colocar isso em uma variável, da seguinte forma:
+
+```
+const routes = new Router();
+```
+Agora iremos chamar uma rota, passando o req e res e retornando um json para testar se está tudo ok.
+
+```
+routes.get('./', (req, res) => {
+  return res.json({ message: 'Hello World' });
+})
+```
+E por fim, iremos exportar nossas rotas, deixando-as visíveis para o restante da aplicação:
+
+```
+module.exportes = routes;
+```
+
+Feito isso, está na hora de rodar o servidor para conferir se está tudo ok.
+
+Execute o seguinte comando no terminal:
+
+```
+node src/server.js
+```
+
+Agora abra o browser e acesse localhost:3333.
+
+
+
 
 Instalando Sucrase
 
 ``` yarn add express ```
+
+Instalando Nodemon
+
+``` yarn add nodemon ```
 
 Estrutura de diretórios
 
