@@ -30,7 +30,10 @@ const routes = require('./routes');
 //define a classe App
 class App {
   constructor(){
-    this.server = expres();
+    this.server = express();
+    
+    this.middwares(); //chama o método
+    this.routes(); //chama o método
   }
 
   middlewares(){
@@ -68,7 +71,7 @@ const routes = new Router();
 Agora iremos chamar uma rota, passando o req e res e retornando um json para testar se está tudo ok.
 
 ```
-routes.get('./', (req, res) => {
+routes.get('/', (req, res) => {
   return res.json({ message: 'Hello World' });
 })
 ```
@@ -88,23 +91,80 @@ node src/server.js
 
 Agora abra o browser e acesse localhost:3333.
 
+Se tudo deu certo, o retorno deverá ser:
 
+```
+{
+  "message": "Hello World!"
+}
+```
 
+---
 
-Instalando Sucrase
+### Sucrase e Nodemon
 
-``` yarn add express ```
+Bom, agora que rodamos o servidor, iremos configurar duas ferramentas interessantes em nosso projeto.
 
-Instalando Nodemon
+Uma delas é o Sucrase, que nos permite utilizar algumas das novas funcionalidades do JavaScript,como por exemplo o import, ao invés do require.
 
-``` yarn add nodemon ```
+A outra ferramenta é o Nodemon, que nos permite atualizar o servidor de forma automática a cada vez que salvamos nossos arquivos. Isso irá nos economizar tempo e bugs.
 
-Estrutura de diretórios
+Então vamos lá. Vamos executar o comando com a flag -D, para dependências de desenvolvimento:
 
-<pre>
-├── src
-    |- app.js
-    |- routes.js
-    |- server.js
-</pre>
+```yarn add sucrase nodemon -D```
 
+Feito isso, basta alterar os requires por imports, ficando dessa forma:
+```
+import express from 'express'; //exemplo 
+
+```
+E também podemos substituir o ```module.exports``` por ```export default```
+
+Para validar estas alterações, iremos configurar o nodemon para reconhecer o sucrase e automatizar o processo também.
+
+Vamos abrir o package.json e adicionar configurações de scripts para facilitar este processo.
+
+Iremos adicionar a seguinte linha ao arquivo:
+
+```
+"scripts": {
+  "dev": "nodemon src/server.js"
+}
+```
+
+Na sequência iremos criar um arquivo chamado nodemon.json na raiz do nosso projeto para fazer com que a nossa aplicação possa entender as funcionalidades utilizando o sucrase.
+
+Então vamos criar o arquivo ```touch nodemon.json``` e vamos adicionar um objeto dentro dele com as seguintes configurações:
+```
+{
+  "execMap": {
+    "js": "node -r sucrase/register"
+  }
+}
+```
+Com este código estamos solicitando a execução do sucrase para depois rodar os demais scripts.
+
+Agora sim, se você rodar ```yarn dev``` irá iniciar o servidor e ficar escutando as alterações de forma automática.
+
+Vamos apenas configurar o debug para rodar normalmente com nodemon.
+
+No package.json iremos adicionar o seguinte script dentro de scripts:
+
+```
+"dev:debug": "nodemon --inspect src/server.js"
+```
+Ficando dessa forma:
+```
+"scripts": {
+  "dev": "nodemon src/server.js",
+  "dev:debug": "nodemon --inspect src/server.js"
+}
+```
+Clicando na aba do bug no VsCode iremos adicionar uma nova configuração:
+```
+{
+  "name": "Launch Program",
+  "restart": "true",
+  "protocol": "inspector"
+}
+```
