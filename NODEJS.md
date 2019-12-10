@@ -168,3 +168,26 @@ Clicando na aba do bug no VsCode iremos adicionar uma nova configuração:
   "protocol": "inspector"
 }
 ```
+### Configurando Docker
+
+Após o download e instalação do Docker [Download aqui!](https://docs.docker.com/docker-for-mac/install/), iremos utilizar o terminal para configurar a nossa aplicação com Docker.
+
+Primeiramente, iremos adicionar o serviço para o banco de dados que iremos utilizar, neste caso, postgres.
+
+No terminal execute:
+```
+docker run --name databaseName -e POSTGRES_PASSWORD=qualquersenha -p 5432:5432 -d postgres
+```
+
+Na sequência, iremos executar ```docker ps``` para ver as imagens em execução.
+
+Agora vamos baixar um programa chamado de POSTBIRD, para nos auxiliar na visualização do nosso banco de dados, e iremos entrar com os dados de aceso ao banco que criamos.
+
+[Faça o download aqui do PostBird](https://electronjs.org/apps/postbird)
+
+Todo o trabalho de manipulação de banco de dados será feito pela aplicação e iremos utilizar o postbird apenas para consulta, se for preciso, mas precisaremos deixar nosso BD rodando.
+
+### Sequelize (ORM) e MVC (Model, Views e Controllers)
+
+O Sequelize irá nos auxiliar na manipulação de dados no banco de dados.
+
