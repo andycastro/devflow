@@ -270,4 +270,78 @@ Por padrão será utilizado o npm ao instalar as dependências que configuramos,
 
 Verifique se no seu VSCode já está com ESLint instalado, se não, [clique aqui para instalar.](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
+Vamos abrir o arquivo de configuração do VSCode settings.json executando o comando (command + p).
+
+As configurações para o ESLint são:
+```
+//Elint preferences
+"eslint.autoFixOnSave": true,
+"eslint.validate": [
+  {
+    "language": "javascript",
+    "autoFix": true
+  },
+  {
+    "language": "javascriptreact",
+    "autoFix": true
+  }
+  
+],
+//
+```
+
+No qual ```"eslint.autoFixOnSave": true,``` fará as correções automaticamente e ```"eslint.validate"``` nos permite aplicar para JavaScript e JavaScript React.
+
+Agora iremos sobrescrever algumas regras, editando o arquivo **.eslintrc.js**.
+
+```
+rules: {
+  "class-methods-use-this": "off",
+  "no-param-reassign":"off",
+  "camelcase":"off",
+  "no-unused-vars": ["error", { "argsIgnorePattern": "next" }],
+}
+```
+
+Feito isso, iremos instalar o Prettier, para nos auxiliar no "design" do nosso código.
+
+Então, iremos executar no terminal o seguinte comando:
+
+```yarn add prettier eslint-config-prettier eslint-plugin-prettier -D```
+
+Então no **.eslintrc.js** iremos adicionar o seguinte código:
+
+```
+extends: ['airbnb-base', 'prettier'],
+plugins: ['prettier'],
+rules: {
+  "prettier/prettier": "error"
+}
+```
+
+Ok, precisamos agora criar um arquivo na raiz do nosso projeto chamado **.prettierrc** para ajustar o comportamento do Prettier com ESLint.
+
+Nele, adicionaremos o seguinte código:
+
+```
+{
+  "singleQote": true,
+  "trailingComma": "es5"
+}
+```
+Para corrigir todos os arquivos de forma automática, iremos executar no terminal o seguinte comando:
+
+```yarn eslint --fix src --ext .js```
+
+Por final, iremos instalar uma extensão em nosso VSCode chamado **editorconfig** [Download aqui.](https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig)
+e iremos, na raiz do projeto, dentro do VSCode, clicaremos com botão direito e **Generate .editorconfig** para gerar o arquivo de configuração para padronizar algumas regras para editores de texto.
+
+Editando o arquivo gerado anteriormente, iremos passar o parâmetro **true** para as seguintes opções:
+
+```
+trim_trailing_whitespace = true
+insert_final_newline=true
+```
+
+Dessa forma, caso outros programadores utilizem editores diferentes, isso garantirá um maior padrão para nosso código.
 
