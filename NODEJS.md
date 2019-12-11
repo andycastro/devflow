@@ -237,5 +237,37 @@ Model: armazena a abstração do banco de dados, utilizado para manipular os dad
 Controller: É o ponto de entrada das requisições da nossa aplicação, no qual uma rota geralmente estará associada diretamente com um método do controller. Podemos incluir grande parte das regras de negócios da aplicação no controller.
 - São basicamente um classe
 - Sempre retornam um JSON
+- Terão 5 métodos (não mais que isso)
+  - index() {}    //lista usuários
+  - show() {}     //exibe um único usuário
+  - store() {}    //cadastra usuário
+  - update() {}   //altera usuário
+  - delete() {}   //remove usuário
 
 View: É o retorno do cliente, ou seja, o que chega ao final da aplicação para entregar o conteúdo ao cliente.
+
+### Eslint, Prettier e EditorConfig
+
+Agora iremos configurar algumas ferramentas de desenvolvimento para padronizar nosso código e trabalhar de forma padronizada em equipe.
+
+Iremos instalar e configurar Eslint, Prettier e o EditorConfig.
+
+Instalando e configurando Eslint:
+
+```yarn add eslint -D```
+
+Após instalar, iremos rodar o arquivo de configuração, iniciando o Eslint ```yarn eslint --init``` e iremos avançar com as seguintes opções:
+- To check syntax, find problems, and enforce code style
+- JavaScript modules (import/export)
+- None of these (pergunta se usa React ou Vue.js)
+- Node (barra de espaço para selecionar)
+- Use a popular style guide
+- Airbnb
+- JavaScript
+- Would you like to install them now with npm? Y
+  
+Por padrão será utilizado o npm ao instalar as dependências que configuramos, mas como vamos utilizar yarn, iremos excluir o arquivo que foi criado (package-lock.json) e iremos rodar ```yarn``` na pasta do nosso projeto para criar o arquivo **.eslintrc.js**, onde iremos setar as nossas configurações.
+
+Verifique se no seu VSCode já está com ESLint instalado, se não, [clique aqui para instalar.](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+
+
