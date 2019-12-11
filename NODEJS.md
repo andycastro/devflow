@@ -345,3 +345,18 @@ insert_final_newline=true
 
 Dessa forma, caso outros programadores utilizem editores diferentes, isso garantirá um maior padrão para nosso código.
 
+### Configurando o Sequelize
+
+Dentro da pasta **src** iremos criar um conjunto de novas pastas e alguns arquivos:
+- config
+  - database.js //conterá nossas configurações de acesso ao banco de dados
+- database
+  - migrations
+- app
+  - controllers
+  - models
+
+Iremos instalar o **Sequelize** e **Sequelize Cli**
+
+```yarn add sequelize``` e ```yarn sequelize-cli -D```
+
