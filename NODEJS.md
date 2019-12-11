@@ -191,3 +191,51 @@ Todo o trabalho de manipulação de banco de dados será feito pela aplicação 
 
 O Sequelize irá nos auxiliar na manipulação de dados no banco de dados.
 
+**Migrations** São controle de versões para base de dados, no qual cada arquivo contém instruções para criação, edição ou remoção de tabelas e colunas.
+
+As migrations mantém a base de dados atualizada entre todos os desenvolvedores do time e também no ambiente de produção sendo cada arquivo uma migration ordenada por data.
+
+Dois métodos são utilizados nas migrations, o **UP** para executar a migration e o **DOWN** para realizar um rollback.
+
+Abaixo um exemplo de migration do sequelize para criar uma nova tabela no banco de dados:
+
+```
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable('users', {
+      id: {
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+        type: Sequelize.INTEGER
+      },
+      name: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
+      email: {
+        allowNull: false,
+        unique: true,
+        type: Sequelize.STRING
+      }
+    })
+  },
+
+  down: (queryInterface, Sequelize) => {
+    return queryInterface.dropTable('users')
+  }
+}
+```
+**SEEDS** Nos auxiliam na população de banco de dados no ambiente de desenvolvimento, criando usuários, produtos e outros campos que precisarmos para testar a aplicação.
+
+Os SEEDS não serão utilizados em produção, somente em desenvolvimento.
+
+**Arquitetura MVC - Model, View e Controller** 
+
+Model: armazena a abstração do banco de dados, utilizado para manipular os dados contidos nas tabelas do banco.
+
+Controller: É o ponto de entrada das requisições da nossa aplicação, no qual uma rota geralmente estará associada diretamente com um método do controller. Podemos incluir grande parte das regras de negócios da aplicação no controller.
+- São basicamente um classe
+- Sempre retornam um JSON
+
+View: É o retorno do cliente, ou seja, o que chega ao final da aplicação para entregar o conteúdo ao cliente.
