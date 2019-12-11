@@ -621,3 +621,7 @@ class User extends Model {
 export default User;
 
 ```
+**Testando** no Insomnia, cadastra um novo usuário e confere no Post Bird.
+
+### Autenticação de usuários com JWT - Json Web Token
+
