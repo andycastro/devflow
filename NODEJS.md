@@ -512,5 +512,112 @@ Feito isso, iremos importar este nosso arquivo de conexão com banco de dados no
 
 ### Cadastro de usuários
 
-Vamos iniciar criando nosso controller de usuários chamado de **UserController.js**
+Vamos iniciar criando nosso controller de usuários chamado de **UserController.js** para criação de usuários.
 
+O arquivo final do **UserController.js** ficará neste formato:
+
+```
+import User from '../models.User';
+
+class UserController {
+  async store(req, res){
+  const userExists = await User.findOne({ where: { email: req.body.email } });
+
+  if(userExists){
+    return res.status(400).json({ error: 'User already exists.' });
+  }
+
+    const { id, name, email, provider } = await User.create(req.body);
+
+    return res.json({
+      id,
+      name,
+      email,
+      provider,
+    });
+
+  }
+}
+
+export default new UserController();
+```
+
+Vamos precisar editar nosso arquivo routes.js e o final ficará dessa forma:
+
+```
+import { Router } from 'express';
+
+import UserController from './app/controllers/UserController';
+
+const routes = new Router();
+
+routes.post('/users', UserController.store);
+
+export default routes;
+```
+
+Para testar, iremos abrir o Insomnia e criar um novo workspace **nomeDoProjeto**, criar uma pasta Users, configurar a base_url nos enviroments.
+
+Dentro da pasta Users iremos criar um POST "Create" com os seguintes dados e executar:
+
+```
+{
+  "name": "Nome do Usuário",
+  "email": "email@email.com",
+  "password_hash": "123456"
+}
+```
+
+### Gerando hash de senhas de usuários
+
+Neste módulo iremos utilizar o **bcryptjs**, dessa forma iremos adicionar ele utilizando ```yarn add bcryptjs```.
+
+Acessando **models/User.js** iremos importar o **bcryptjs**, então: ```import bcrypt from 'bcryptjs'``` e iremos adicionar um novo campo chamado **password**. ```password: Sequelize.VIRTUAL```. O **VIRTUAL** indica que ele não estará presente no banco de dados, apenas de forma virtual na aplicação.
+
+Após o **super.init** iremos utilizar uma funcionalidade de hook do Sequelize ```this.addHook('beforeSave', () => {});```. O beforeSave executará antes de qualquer ação de criação de usuários, sendo assim, poderemos manipular estes dados anteriormente ao salvamento no banco de dados.
+
+Então, iremos fazer uma verificação, antes do cadastro do usuário, desta forma:
+
+```
+this.addHook('beforeSave', async (user) => {
+  if (user.password) {
+    user.password_hash = await bcrypt.hash(user.password, 8);
+  }
+});
+```
+O que está acontecendo aqui? Basicamente o usuário informará a sua senha **password**, que é apenas **VIRTUAL**, e com **beforeSave** estamos pegando essa password e cryptografando com o **bcryptjs** com round/força 8 de cryptografia.
+
+O nosso arquivo final do **models/User.js** ficará assim:
+
+```
+import Sequelize, { Model } from 'sequelize';
+import bcrypt from 'bcryptjs';
+
+class User extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        name: Sequelize.STRING,
+        email: Sequelize.STRING,
+        password: Sequelize.VIRTUAL,
+        password_hash: Sequelize.STRING,
+        provider: Sequelize.BOOLEAN,
+      },
+      {
+        sequelize,
+      }
+    );
+    
+    this.addHook('beforeSave', async (user) => {
+      if (user.password) {
+        user.password_hash = await bcrypt.hash(user.password, 8);
+      }
+    });
+
+    return this;
+  }
+}
+
+export default User;
+
+```
