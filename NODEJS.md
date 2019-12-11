@@ -449,3 +449,66 @@ module.exports = {
 Vamos executar a nossa migration utilizando o comando ```yarn sequelize db:migrate``` e conferir no PostBird o resultado da criação dos nossos campos no banco de dados.
 
 Para desfazer uma migration, caso precise, basta rodar o comando ```yarn sequelize db:migrate:undo``` para a última alteração e ```yarn sequelize db:migrate:undo:all``` para todas as migrations.
+
+### Model de usuários
+
+Iremos criar agora os models de usuários, para poder criar, editar e excluir usuários.
+
+Vamos criar um arquivo dentro de **models** chamado **User.js**.
+
+```
+import Sequelize { Model } from 'sequelize';
+
+class User extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        name: Sequelize.STRING,
+        email: Sequelize.STRING,
+        password_hash: Sequelize.STRING,
+        provider: Sequelize.BOOLEAN
+      },
+      {
+        sequelize,
+      }
+    );
+  }
+}
+
+export default User;
+```
+
+### Criando loader de models
+
+Vamos criar um arquivo que irá fazer a conexão com banco de dados postgres.
+
+Dentro da pasta **database** iremos criar um arquivo chamado **index.js** e nele conterá o seguinte script:
+
+```
+import Sequelize from 'sequelize';
+
+import User from '../app/models/User';
+
+import databaseConfig from '../config/database';
+
+const models = [User];
+
+class Database {
+  constructor(){
+    this.init();
+  }
+
+  init(){
+    this.connection = new Sequelize(databaseConfig);
+
+    models.map(model => model.init(this.connection));
+  }
+}
+
+export default new Database();
+```
+
+Feito isso, iremos importar este nosso arquivo de conexão com banco de dados no arquivo **app.js**, inserindo um ```import './database'```.
+
+### Cadastro de usuários
+
