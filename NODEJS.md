@@ -360,3 +360,92 @@ Iremos instalar o **Sequelize** e **Sequelize Cli**
 
 ```yarn add sequelize``` e ```yarn sequelize-cli -D```
 
+Criaremos o arquivo **.sequelizerc** em nossa raiz para configuração das nossas migrations.
+
+Editando o **.sequelizerc** temos o seguinte:
+
+```
+const { resolve } = require('path');
+
+module.exports = {
+  config: resolve(__dirname, 'src', 'config', 'database.js'),
+  'models-path': resolve(__dirname, 'src', 'app', 'models'),
+  'migrations-path': resolve(__dirname, 'src', 'database', 'migrations'),
+  'seeders-path': resolve(__dirname, 'src', 'database', 'seeds'),
+};
+```
+
+Feito isso, iremos editar o arquivo **src/config/databse.js** para conexão com banco de dados:
+
+```
+module.exports = {
+  dialect: 'postgress',
+  host: 'localhost',
+  username: 'USER_NAME',
+  password: 'PASSWORD',
+  database: 'DATABASE_NAME',
+  define: {
+    timestamps: true,
+    underscored: true,
+    underscoredAll: true,
+  },
+}
+```
+
+Para utilizar o dialect Postgress, iremos executar o comando ```yarn add og pg-hstore``` em nosso terminal.
+
+E por aqui finalizamos a nossa configuração do Sequelize.
+
+### Migration de usuário
+
+Para criar a nossa migration com auxílio do Sequelize, iremos executar o seguinte comando no terminal:
+```yarn sequelize migration:create --name=create-users```, onde **create-users** é o nome que estamos utilizando neste momento, mas poderia ser **create-products** e por ai vai.
+
+Após isso, podemos verificar que dentro da pasta **migrations** foi gerado um arquivo e é nele que iremos passar as informações dos campos que queremos criar. Vamos editá-lo para a nossa finalidade. Abaixo, um arquivo de exemplo:
+
+```
+'use strict'
+
+module.exports = {
+  up: (queryInterface, Sequelize) => {
+    return queryInterface.createTable('users', {
+      id: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        autoIncrement: true,
+        primaryKey: true,
+      },
+      name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+      },
+      password_hash: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      provider: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+      },
+      created_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      },
+      updated_at: {
+        type: Sequelize.DATE,
+        allowNull: false,
+      }
+    });
+  },
+
+  down: queryInterface => {
+    return queryInterface.dropTable('users');
+  } 
+}
+```
+
+Vamos executar a nossa migration utilizando o comando ```yarn sequelize db:migrate``` e conferir no PostBird o resultado da criação dos nossos campos no banco de dados.
+
+Para desfazer uma migration, caso precise, basta rodar o comando ```yarn sequelize db:migrate:undo``` para a última alteração e ```yarn sequelize db:migrate:undo:all``` para todas as migrations.
