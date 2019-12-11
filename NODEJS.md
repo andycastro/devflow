@@ -512,3 +512,5 @@ Feito isso, iremos importar este nosso arquivo de conexão com banco de dados no
 
 ### Cadastro de usuários
 
+Vamos iniciar criando nosso controller de usuários chamado de **UserController.js**
+
