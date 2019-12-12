@@ -1,19 +1,17 @@
-# Iniciando aplicação NodeJS
-
 Este documento auxilia na criação de uma REST API utilizando NodeJs e Postgres
 
-**Table of Contents**
+**Contents**
 
-- [Iniciando aplicação NodeJS](#iniciando-aplica%c3%a7%c3%a3o-nodejs)
-  - [Configurações iniciais](#configura%c3%a7%c3%b5es-iniciais)
-    - [Sucrase e Nodemon](#sucrase-e-nodemon)
-    - [Configurando o Sequelize](#configurando-o-sequelize)
-    - [Model de usuários](#model-de-usu%c3%a1rios)
-    - [Criando loader de models](#criando-loader-de-models)
-    - [Cadastro de usuários](#cadastro-de-usu%c3%a1rios)
-    - [Gerando hash de senhas de usuários](#gerando-hash-de-senhas-de-usu%c3%a1rios)
-    - [Autenticação de usuários com JWT - Json Web Token](#autentica%c3%a7%c3%a3o-de-usu%c3%a1rios-com-jwt---json-web-token)
+- [Configurações iniciais](#configura%c3%a7%c3%b5es-iniciais)
+- [Sucrase e Nodemon](#sucrase-e-nodemon)
+- [Configurando o Sequelize](#configurando-o-sequelize)
+- [Model de usuários](#model-de-usu%c3%a1rios)
+- [Criando loader de models](#criando-loader-de-models)
+- [Cadastro de usuários](#cadastro-de-usu%c3%a1rios)
+- [Gerando hash de senhas de usuários](#gerando-hash-de-senhas-de-usu%c3%a1rios)
+- [Autenticação de usuários com JWT - Json Web Token](#autentica%c3%a7%c3%a3o-de-usu%c3%a1rios-com-jwt---json-web-token)
 
+#Iniciando aplicação NodeJS
 
 ## Configurações iniciais
 
@@ -117,7 +115,7 @@ Se tudo deu certo, o retorno deverá ser:
 
 ---
 
-### Sucrase e Nodemon
+## Sucrase e Nodemon
 
 Bom, agora que rodamos o servidor, iremos configurar duas ferramentas interessantes em nosso projeto.
 
@@ -184,7 +182,7 @@ Clicando na aba do bug no VsCode iremos adicionar uma nova configuração:
   "protocol": "inspector"
 }
 ```
-### Configurando Docker
+## Configurando Docker
 
 Após o download e instalação do Docker [Download aqui!](https://docs.docker.com/docker-for-mac/install/), iremos utilizar o terminal para configurar a nossa aplicação com Docker.
 
@@ -203,7 +201,7 @@ Agora vamos baixar um programa chamado de POSTBIRD, para nos auxiliar na visuali
 
 Todo o trabalho de manipulação de banco de dados será feito pela aplicação e iremos utilizar o postbird apenas para consulta, se for preciso, mas precisaremos deixar nosso BD rodando.
 
-### Sequelize (ORM) e MVC (Model, Views e Controllers)
+## Sequelize (ORM) e MVC (Model, Views e Controllers)
 
 O Sequelize irá nos auxiliar na manipulação de dados no banco de dados.
 
@@ -262,7 +260,7 @@ Controller: É o ponto de entrada das requisições da nossa aplicação, no qua
 
 View: É o retorno do cliente, ou seja, o que chega ao final da aplicação para entregar o conteúdo ao cliente.
 
-### Eslint, Prettier e EditorConfig
+## Eslint, Prettier e EditorConfig
 
 Agora iremos configurar algumas ferramentas de desenvolvimento para padronizar nosso código e trabalhar de forma padronizada em equipe.
 
@@ -361,7 +359,7 @@ insert_final_newline=true
 
 Dessa forma, caso outros programadores utilizem editores diferentes, isso garantirá um maior padrão para nosso código.
 
-### Configurando o Sequelize
+## Configurando o Sequelize
 
 Dentro da pasta **src** iremos criar um conjunto de novas pastas e alguns arquivos:
 - config
@@ -412,7 +410,7 @@ Para utilizar o dialect Postgress, iremos executar o comando ```yarn add og pg-h
 
 E por aqui finalizamos a nossa configuração do Sequelize.
 
-### Migration de usuário
+## Migration de usuário
 
 Para criar a nossa migration com auxílio do Sequelize, iremos executar o seguinte comando no terminal:
 ```yarn sequelize migration:create --name=create-users```, onde **create-users** é o nome que estamos utilizando neste momento, mas poderia ser **create-products** e por ai vai.
@@ -466,7 +464,7 @@ Vamos executar a nossa migration utilizando o comando ```yarn sequelize db:migra
 
 Para desfazer uma migration, caso precise, basta rodar o comando ```yarn sequelize db:migrate:undo``` para a última alteração e ```yarn sequelize db:migrate:undo:all``` para todas as migrations.
 
-### Model de usuários
+## Model de usuários
 
 Iremos criar agora os models de usuários, para poder criar, editar e excluir usuários.
 
@@ -494,7 +492,7 @@ class User extends Model {
 export default User;
 ```
 
-### Criando loader de models
+## Criando loader de models
 
 Vamos criar um arquivo que irá fazer a conexão com banco de dados postgres.
 
@@ -526,7 +524,7 @@ export default new Database();
 
 Feito isso, iremos importar este nosso arquivo de conexão com banco de dados no arquivo **app.js**, inserindo um ```import './database'```.
 
-### Cadastro de usuários
+## Cadastro de usuários
 
 Vamos iniciar criando nosso controller de usuários chamado de **UserController.js** para criação de usuários.
 
@@ -584,7 +582,7 @@ Dentro da pasta Users iremos criar um POST "Create" com os seguintes dados e exe
 }
 ```
 
-### Gerando hash de senhas de usuários
+## Gerando hash de senhas de usuários
 
 Neste módulo iremos utilizar o **bcryptjs**, dessa forma iremos adicionar ele utilizando ```yarn add bcryptjs```.
 
@@ -639,5 +637,5 @@ export default User;
 ```
 **Testando** no Insomnia, cadastra um novo usuário e confere no Post Bird.
 
-### Autenticação de usuários com JWT - Json Web Token
+## Autenticação de usuários com JWT - Json Web Token
 
