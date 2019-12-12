@@ -1,6 +1,6 @@
 # Iniciando aplicação NodeJS
 
-Iremos configurar uma aplicação REST API do zero utilizando NodeJs e Postgres
+Este documento auxilia na criação de uma REST API utilizando NodeJs e Postgres
 
 **Table of Contents**
 
