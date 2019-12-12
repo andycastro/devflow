@@ -2,16 +2,17 @@ Este documento auxilia na criação de uma REST API utilizando NodeJs e Postgres
 
 **Contents**
 
-- [Configurações iniciais](#configura%c3%a7%c3%b5es-iniciais)
-- [Sucrase e Nodemon](#sucrase-e-nodemon)
-- [Configurando o Sequelize](#configurando-o-sequelize)
-- [Model de usuários](#model-de-usu%c3%a1rios)
-- [Criando loader de models](#criando-loader-de-models)
-- [Cadastro de usuários](#cadastro-de-usu%c3%a1rios)
-- [Gerando hash de senhas de usuários](#gerando-hash-de-senhas-de-usu%c3%a1rios)
-- [Autenticação de usuários com JWT - Json Web Token](#autentica%c3%a7%c3%a3o-de-usu%c3%a1rios-com-jwt---json-web-token)
+- [Iniciando aplicação NodeJS](#iniciando-aplica%c3%a7%c3%a3o-nodejs)
+  - [Configurações iniciais](#configura%c3%a7%c3%b5es-iniciais)
+  - [Sucrase e Nodemon](#sucrase-e-nodemon)
+  - [Configurando o Sequelize](#configurando-o-sequelize)
+  - [Model de usuários](#model-de-usu%c3%a1rios)
+  - [Criando loader de models](#criando-loader-de-models)
+  - [Cadastro de usuários](#cadastro-de-usu%c3%a1rios)
+  - [Gerando hash de senhas de usuários](#gerando-hash-de-senhas-de-usu%c3%a1rios)
+  - [Autenticação de usuários com JWT - Json Web Token](#autentica%c3%a7%c3%a3o-de-usu%c3%a1rios-com-jwt---json-web-token)
 
-#Iniciando aplicação NodeJS
+# Iniciando aplicação NodeJS
 
 ## Configurações iniciais
 
