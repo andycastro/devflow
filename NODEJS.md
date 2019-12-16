@@ -640,3 +640,34 @@ export default User;
 
 ## Autenticação de usuários com JWT - Json Web Token
 
+A partir daqui, iremos iniciar o processo de autenticação dos usuários da nossa 
+aplicação utilizando o JWT.
+
+Na pasta **controllers** iremos criar um arquivo chamado **SessionController.js** e nele iremos importar o models **User** ```import User from '../models/User';``` e iniciar a nossa classe com **async** para podermos utilizar o **await** e o método **store** para criação da sessão, dessa forma: 
+```
+class SessionController {
+  async store(req, res) {
+
+  }
+}
+```
+Por final, exportaremos ```export default new SessionController();```.
+
+O nosso arquivo inicial SessionController.js ficará assim:
+
+```
+import User from '../models/User';
+
+class SessionController {
+  async store(req, res){
+
+  }
+}
+
+export default new SessionController();
+```
+Iremos também instalar o **jsonwebtoken** executando o seguinte comando no terminal: ```yarn add jsonwebtoken```. Ele será responsável por gerar o nosso token.
+
+Finalizada a instalação, iremos importar ele no **SessionController.js** ```import jwt from 'jsonwebtoken';```.
+
+No corpo da nossa classe iremos
