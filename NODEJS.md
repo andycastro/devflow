@@ -807,3 +807,6 @@ token: jwt.sign({ id }, 'authConfig.secret', {
 ```
 
 ## Middware de autenticação
+
+Agora que nosso projeto está tomando forma, precisamos criar algumas limitações para que tipos de usuários possam ou não acessar alguma funcionalidade ou página específica e para isso iremos utilizar os middwares.
+
