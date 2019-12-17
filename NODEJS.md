@@ -11,6 +11,7 @@ Este documento auxilia na criação de uma REST API utilizando NodeJs e Postgres
   - [Cadastro de usuários](#cadastro-de-usu%c3%a1rios)
   - [Gerando hash de senhas de usuários](#gerando-hash-de-senhas-de-usu%c3%a1rios)
   - [Autenticação de usuários com JWT - Json Web Token](#autentica%c3%a7%c3%a3o-de-usu%c3%a1rios-com-jwt---json-web-token)
+  - [Middware de autenticação](#middware-de-autentica%c3%a7%c3%a3o)
 
 # Iniciando aplicação NodeJS
 
@@ -668,9 +669,26 @@ export default new SessionController();
 ```
 Iremos também instalar o **jsonwebtoken** executando o seguinte comando no terminal: ```yarn add jsonwebtoken```. Ele será responsável por gerar o nosso token.
 
-Finalizada a instalação, iremos importar ele no **SessionController.js** ```import jwt from 'jsonwebtoken';```.
+Finalizada a instalação, iremos importar ele no **SessionController.js** 
 
-No corpo da nossa classe iremos pegar o email e senha do usuário ```const { email, password } = req.body``` e iremos fazer uma verificação para validar o usuário ```const user = await User.findOne({ where: {email} });``` e se esse usuário não existir iremos criar uma condição para barrar este acesso apresentando uma mensagem **User not found** dessa forma: 
+```
+import jwt from 'jsonwebtoken';
+```
+
+No corpo da nossa classe iremos pegar o email e senha do usuário 
+
+```
+const { email, password } = req.body
+``` 
+
+e iremos fazer uma verificação para validar o usuário 
+
+```
+const user = await User.findOne({ where: {email} });
+``` 
+
+e se esse usuário não existir iremos criar uma condição para barrar este acesso apresentando uma mensagem **User not found** dessa forma: 
+
 ```
 if (!user) {
   return res.status(401).json({ error: 'User not found' });
@@ -728,7 +746,7 @@ if (!(await user.checkPassword(password))) {
   return res.status(401).json({ error: 'Password do not match!' })
 }
 ```
-Então, se passar pelas validações que colocamos até agora em nossa aplicação o usuário seguirá o fluxo. Vamos continuar armazenando o **id** e **name** do usuário e iremos retornar os dados do usuário e também o **token** do usuário, urilizando o método **sign**, desta forma:
+Então, se passar pelas validações que colocamos até agora em nossa aplicação o usuário seguirá o fluxo. Vamos prosseguir armazenando o **id** e **name** do usuário e iremos retornar os dados do usuário como também o **token**, urilizando o método **sign**, desta forma:
 
 ```
 const { id, name } = user;
@@ -747,4 +765,45 @@ return res.json({
 
 Verificando de perto a variável **token** nós temos o **jwt.sign** recebendo o **id** do usuário e no segundo parâmetro uma **hash** gerada aleatoriamente [pode ser gerada no MD5 Online clicando aqui](https://www.md5online.org/) e temos também um terceiro parâmetro **expiresIn** que configura 7 dias para expiração do token ```expiresIn: '7d'```.
 
-Agora que entendemos isso, iremos chamar o nosso arquivo de token em nossa rota (**route.js**)
+Agora que entendemos isso, iremos chamar o nosso arquivo de token em nossa rota (**routes.js**) importando nosso arquivo ```import SessionController from './app/controllers/SessionController';``` e ```routes.post('./sessions', SessionController.store);```.
+
+Tá na hora de testar, então iremos abrir o **Insomnia**, criar uma pasta chamada **Sessions** e nela iremos criar uma rota **POST** com url **sessions** e iremos passar **email** e **password** dessa forma:
+```
+{
+  "email": "nome@usuario.com.br",
+  "password": "123456"
+}
+```
+Após clicar em **Send** o resultado deverá ser parecido com este:
+```
+{
+  "user": {
+    "id": 4,
+    "name": "name usuario",
+    "email": "email@usuario.com.br"
+  },
+  "token": "tokenGerado"
+}
+```
+Se tá parecido, ótimo, tudo funcionando.
+
+Vamos só organizar o nosso arquivo **SessionController.js** criando um arquivo **auth** para organizar a parte de autenticação da nossa aplicação.
+
+Dentro de config iremos criar um arquivo chamado **auth.js** e nele teremos:
+
+```
+export default {
+  secret: 'hashaleatoria', //recebe a hash gerada no md5 online
+  expiresIn: '7d'
+}
+```
+
+Iremos importar nosso arquivo **hash.js** no **SessionController.js** ```import auth from '../../config/auth';``` e iremos substituir os valores de **hash** e **expiresIn** ficando assim:
+
+```
+token: jwt.sign({ id }, 'authConfig.secret', {
+    expiresIn: authConfig.expiresIn,
+  }),
+```
+
+## Middware de autenticação
