@@ -810,3 +810,92 @@ token: jwt.sign({ id }, 'authConfig.secret', {
 
 Agora que nosso projeto está tomando forma, precisamos criar algumas limitações para que tipos de usuários possam ou não acessar alguma funcionalidade ou página específica e para isso iremos utilizar os middwares.
 
+Este próximo middlware que iremos criar, irá verificar se o usuário está logado na aplicação, recebendo o token via Header/bearer.
+
+Então vamos no **Insomnia** e criar uma requisição com método **put** em **Users** chamada **Update** e nela iremos passar apenas **email** e **password** como forma de edição de dados de usuários, mas ou menos dessa forma:
+
+```
+{
+  "email": "email@usuario.com",
+  "password": "123456"
+}
+```
+Após isso, iremos no **UserController.js** criar um método de **update** logo após o método **store**:
+
+```
+async update(req, res) {
+  return res.json({ ok: true });
+}
+```
+Iremos adicionar a rota também em **routes.js**
+
+```
+routes.put('/users', UserController.update);
+```
+
+**Enviando Tokens** - Utilizando o Insomnia, iremos enviar os tokens ou via **Header**, informando **Authorization** e **Bearer token** ou em **Auth**, selecionando **Bearer Token** e informando o **token**.
+
+Vamos criar uma pasta dentro de **app** chamada **middlewares** e dentro dela iremos criar um arquivo chamado **auth.js** que conterá a nossa função para verificar se o usuário está logado.
+
+```
+export default (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  console.log(authHeader);
+  return next();
+}
+```
+
+e iremos importar nosso middleware na rota e definiremos ele globalmente, e tudo que estiver abaixo dele será impactado, veja como ficará nosso arquivo de rotas:
+
+```
+///routes.js
+
+import { Router } from 'express';
+
+import UserController from './app/controlllers/UserController';
+import SessionController from './app/controllers/SessionController';
+
+import authMiddleware from './app/middlewares/auth';
+
+const routes = new Router();
+
+routes.post('/users', UserController.store);
+routes.post('/sessions', SessionController.store);
+
+routes.use(authMiddleware); //middleware global afetando rotas abaixo dele
+
+routes.put('/users', UserController.update);
+
+export default routes;
+```
+
+**Testando** Ao enviar pelo Insomnia uma alteração já cai no console.log o token.
+
+Continuando, vamos validar a autenticação do usuário quando ele for utilizar a rota de update e nosso arquivo **middlewares/auth.js** ficará assim:
+
+```
+import jwt from 'jsonwebtoken';
+import { promisify } from 'util';
+import authConfig from '../../config/auth';
+
+export default async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Token not provided' })
+  }
+
+  const [, token] = authHeader.split(' ');
+
+  try {
+    const decoded = await promisify(jwt.verify)(token, authConfig.secret);
+
+    req.userId = decoded.id;
+  }catch (err) {
+    return res.status(401).json({ error: 'Invalid Token' });
+  }
+
+  return next();
+}
+```
