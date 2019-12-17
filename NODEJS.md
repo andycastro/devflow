@@ -670,4 +670,81 @@ Iremos também instalar o **jsonwebtoken** executando o seguinte comando no term
 
 Finalizada a instalação, iremos importar ele no **SessionController.js** ```import jwt from 'jsonwebtoken';```.
 
-No corpo da nossa classe iremos
+No corpo da nossa classe iremos pegar o email e senha do usuário ```const { email, password } = req.body``` e iremos fazer uma verificação para validar o usuário ```const user = await User.findOne({ where: {email} });``` e se esse usuário não existir iremos criar uma condição para barrar este acesso apresentando uma mensagem **User not found** dessa forma: 
+```
+if (!user) {
+  return res.status(401).json({ error: 'User not found' });
+}
+```
+E também iremos verificar a senha do usuário, criando um método (após o **return this; }**) no arquivo User.js, dessa forma: 
+```
+checkPassword(password) {
+  return bcrypt.compare(password, this.password_hash);
+}
+``` 
+O nosso arquivo final do **models/User.js** ficará assim:
+
+```
+import Sequelize, { Model } from 'sequelize';
+import bcrypt from 'bcryptjs';
+
+class User extends Model {
+  static init(sequelize) {
+    super.init(
+      {
+        name: Sequelize.STRING,
+        email: Sequelize.STRING,
+        password: Sequelize.VIRTUAL,
+        password_hash: Sequelize.STRING,
+        provider: Sequelize.BOOLEAN,
+      },
+      {
+        sequelize,
+      }
+    );
+    
+    this.addHook('beforeSave', async (user) => {
+      if (user.password) {
+        user.password_hash = await bcrypt.hash(user.password, 8);
+      }
+    });
+
+    return this;
+  }
+
+  checkPassword(password) {
+    return bcrypt.compare(password, this.password_hash);
+  }
+}
+
+export default User;
+
+```
+
+Voltando ao nosso **SessionController.js** iremos verificar o password do usuário, verificando se a senha não bate. Segue:
+
+```
+if (!(await user.checkPassword(password))) {
+  return res.status(401).json({ error: 'Password do not match!' })
+}
+```
+Então, se passar pelas validações que colocamos até agora em nossa aplicação o usuário seguirá o fluxo. Vamos continuar armazenando o **id** e **name** do usuário e iremos retornar os dados do usuário e também o **token** do usuário, urilizando o método **sign**, desta forma:
+
+```
+const { id, name } = user;
+
+return res.json({
+  user: {
+    id,
+    name,
+    email
+  },
+  token: jwt.sign({ id }, 'hashaleatoria', {
+    expiresIn: '7d',
+  }),
+})
+```
+
+Verificando de perto a variável **token** nós temos o **jwt.sign** recebendo o **id** do usuário e no segundo parâmetro uma **hash** gerada aleatoriamente [pode ser gerada no MD5 Online clicando aqui](https://www.md5online.org/) e temos também um terceiro parâmetro **expiresIn** que configura 7 dias para expiração do token ```expiresIn: '7d'```.
+
+Agora que entendemos isso, iremos chamar o nosso arquivo de token em nossa rota (**route.js**)
