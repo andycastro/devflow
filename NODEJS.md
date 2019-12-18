@@ -903,6 +903,22 @@ export default async (req, res, next) => {
 
 ## Update do usuário
 
+Iremos fazer o update dos dados do usuário e primeiramente iremos padronizar para que quando o usuário for fazer o update da senha ele tenha que digitar a senha antiga e a nova. Em nosso Insomnia a estrutura será parecida com essa:
+
+```
+{
+  "name": "Nome Usuário",
+  "email": "usuario@email.com.br",
+  "oldPassword": "123456",
+  "password": "12345678"
+}
+```
+
+
+
+
+
+
 Arquivo final de **UserController.js** com validação e update do usuário:
 
 ```
